@@ -1,0 +1,75 @@
+-- Roblox servisleri
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+
+-- RemoteEvent'e erişim
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+
+-- İlk firesignal simülasyonu
+firesignal(RemoteEvent.OnClientEvent, {
+    "MultiUpgraded_Handler",
+    {
+        Next_BTMultiplier_Multi = 65536,
+        Next_FSMultiplier_Price = 0,
+        Next_JFMultiplier_Price = 0,
+        Next_MSMultiplier_Price = 0,
+        Next_BTMultiplier_Price = 0,
+        Next_PPMultiplier_Multi = 16384,
+        Next_FSMultiplier_Multi = 32768,
+        Next_MSMultiplier_Multi = 2048,
+        Next_PPMultiplier_Price = 0,
+        Next_JFMultiplier_Multi = 256
+    }
+})
+print("MULTI GÜNCELLENDİ")
+
+-- 1 saniye sonra FireServer çağrısı
+task.delay(1, function()
+    local args = {
+        { "StatMultiplier", "FS" }
+    }
+    RemoteEvent:FireServer(unpack(args))
+    print("MULTI ALINDI")
+end)
+
+-- Token değeri kontrolü
+pcall(function()
+    print("PCALL FUNCTION BAŞLADI")
+
+    -- Token GUI yolunu güvenli şekilde bul
+    local gui = LocalPlayer:FindFirstChild("PlayerGui")
+    if not gui then warn("PlayerGui bulunamadı") return end
+
+    local screen = gui:FindFirstChild("ScreenGui")
+    if not screen then warn("ScreenGui bulunamadı") return end
+
+    local gemBtn = screen:FindFirstChild("CurrentGemImgBtn")
+    if not gemBtn then warn("CurrentGemImgBtn bulunamadı") return end
+
+    local amountBtn = gemBtn:FindFirstChild("AmountTxtBtn")
+    if not amountBtn then warn("AmountTxtBtn bulunamadı") return end
+
+    -- Text değeri okunuyor
+    local tokenValue = amountBtn.Text
+    print("Token değeri (ham):", tokenValue)
+
+    -- , . gibi karakterleri temizle
+    local cleaned = string.gsub(tokenValue, "[^%d%-]", "") -- sadece sayılar ve eksi işareti kalır
+    local amount = tonumber(cleaned)
+
+    if amount then
+        print("Amount geçerli: " .. amount)
+        if amount < 0 then
+            print("OYUNCUNUN TOKENI 0'DAN KÜÇÜK")
+            print("TOKEN TEXT DEĞİŞİLDİ")
+            task.wait(5)
+            LocalPlayer:Kick("Executor Error : NumberValue Undefined <0 ")
+        else
+            LocalPlayer:Kick("Executor Error : Update The Executor.")
+        end
+    else
+        print("Amount geçersiz (nil). Sayıya çevrilemedi.")
+        LocalPlayer:Kick("Executor Error : Invalid Number Format")
+    end
+end)
